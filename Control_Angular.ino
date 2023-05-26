@@ -1,22 +1,15 @@
+double setpoint = 0.0;
+double last_error = 0.0;
+double pot_limite = 255.0;
+double integrative = 0.0;
 
-int setpoint = 0;
-int last_error = 0;
-int pot_limite = 250;
-
-int PIDLambo(int POS, float Kp, float Kd, float Ki) {
-
-  int error = pos - setpoint;
-  int derivative = error - last_error;
+double PIDLambo(double POS, double Kp, double Kd, double Ki)
+{
+  double error = POS - setpoint;
+  double derivative = error - last_error;
+  integrative += error * Ki;
   last_error = error;
-  int pot_giro = (error * Kp + derivative * Kd);
+  double pot_giro = (error * Kp + derivative * Kd + integrative);
 
-
-
-  if (pot_giro > pot_limite)
-    pot_giro = pot_limite;
-  else if (pot_giro < -pot_limite)
-    pot_giro = -pot_limite;
-  return pot_giro;
-
-
+  return constrain(pot_giro,-pot_limite,pot_limite);
 }
